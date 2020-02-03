@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Event Delegation JS</title>
+
+		<style>
+			#test {
+				width: 40px;
+				height: 40px;
+				background-color: aqua;
+				margin-top: 10px;
+			}
+
+			#test:hover {
+				background-color: #3333;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<!--It works, but not sure that is a valid solution-->
+		<div id="menu">
+			<button data-action="save">Save</button>
+			<button data-action="load">Load</button>
+			<button data-action="search">Search</button>
+		</div>
+		<div id="test"></div>
+
+		<script>
+			class Test {
+				constructor(elem) {
+					// elem.onclick = this.ChangeSize;
+					this._elem = elem;
+					this.ChangeSize();
+				}
+
+				ChangeSize(event) {
+					this._elem.style.width = 200 + 'px';
+				}
+			}
+			class Menu {
+				constructor(elem, e) {
+					// elem.onclick = this.onClick.bind(this);
+					this._elem = this;
+					this.onClick(e);
+				}
+
+				onClick(event) {
+					let action = event.target.dataset.action;
+					if (action) {
+						this._elem[action]();
+					}
+				}
+
+				save() {
+					console.log('Save button clicked!');
+				}
+				load() {
+					console.log('Load button clicked!');
+				}
+				search() {
+					console.log('Search button clicked!');
+				}
+			}
+
+			function eventHandler(elem, e) {
+				this._id = elem.getAttribute('id');
+				if (this._id === 'menu') {
+					return new Menu(elem, e);
+				} else if (this._id === 'test') {
+					return new Test(elem);
+				}
+			}
+			//global event listener
+			this.addEventListener('click', e => {
+				if (e.target.hasAttribute('id')) {
+					eventHandler(e.target);
+				} else if (e.target.closest('div')) {
+					if (e.target.closest('div').hasAttribute('id')) {
+						eventHandler(e.target.closest('div'), e);
+					}
+				}
+			});
+			// eventHandler(menu);
+			// eventHandler(test);
+		</script>
+	</body>
+</html>

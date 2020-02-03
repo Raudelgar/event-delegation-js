@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Event Delegation JS</title>
+	</head>
+	<body>
+		<h1>Class es6 Example</h1>
+		<div id="menu">
+			<button data-action="save">Save</button>
+			<button data-action="load">Load</button>
+			<button data-action="search">Search</button>
+		</div>
+
+		<script>
+			class Menu {
+				constructor(elem) {
+					console.log(elem);
+					elem.onclick = this.onClick.bind(this);
+				}
+
+				onClick(event) {
+					let action = event.target.dataset.action;
+					if (action) {
+						this[action]();
+					}
+				}
+
+				save() {
+					console.log('Save button clicked!');
+				}
+				load() {
+					console.log('Load button clicked!');
+				}
+				search() {
+					console.log('Search button clicked!');
+				}
+			}
+
+			new Menu(menu);
+		</script>
+	</body>
+</html>
